@@ -1,13 +1,18 @@
 # Dependency Injection in Android (work in progress)
 If you read enough about Android development, you'll inevitably run into a library named [Dagger][1], a dependency injector built for Android.  Everyone online seems to rave about it, but it can be daunting to learn how or why to use it.  The tutorial Square provides (on the Dagger webpage) is good, but the example they use is kind of abstract, and it assumes you have a decent amount of prior knowledge on the subject.  Here I'll start from the ground up and teach you everything you need to know to get up and running with Dagger.
 
+## What does Dagger do?
+
 Let's start with dependency injection: it's a term that's thrown around a lot within industry, but what does it really mean?  The best explanation I've found is [this one][2] by James Shore.  It's a quick read (1-3 mins), but if you don't want to go through it, the main takeaway from the article is the following quote:
-> Dependency injection means giving an object its instance variables. Really. That's it.
+> **Dependency injection means giving an object its instance variables. Really. That's it.**
 
 It's true, and that's what Dagger does to help: it allows you to define all of your dependencies individually and organize them into a [directed acyclic graph][3] (which is where the name comes from, if you're wondering).  Any of the objects defined within your DAG can then be instantiated within your application through a simple `@Inject` annotation.  This is good for a number of reasons:
--You don't have to worry about how to order your dependencies, which can be a pain for large projects.
--It seriously decouples your code.  If you want to modify or swap out integral components in your app, you can now do it very efficiently.  
-..-This is great for unit testing--for example, if you want to mock your data instead of retrieve it from a server.
+* You don't have to worry about how to order your dependencies, which can be a pain for large projects.
+* It seriously decouples your code.  If you want to modify or swap out integral components in your app, you can now do it very efficiently.
+  * This is great for unit testing--for example, if you want to mock your data instead of retrieve it from a server.
+It should be noted that Dagger's benefits become exponentially more apparent the larger a project becomes.
+
+## Code Example
 
 Now we know what Dagger does, let's take a look at some code.  I made a sample app with some practical applications of Dagger.  The app doesn't do anything fancy, it just takes the top posts from Reddit (using [Retrofit][4]) and displays the title and thumbnail of each post in a list.  The thumbnails are loaded with [Picasso][5] (Square libraries are awesome).  
 
