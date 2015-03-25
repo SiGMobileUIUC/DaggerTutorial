@@ -14,13 +14,15 @@ import retrofit.client.OkClient;
 import retrofit.converter.Converter;
 import retrofit.converter.GsonConverter;
 
+import edu.uiuc.acm.sigmobile.daggertutorial.RedditService;
+
 /**
  * Created by Stephen on 3/24/2015.
  */
 @Module
 public class ApiModule {
 
-    private static final String API_URL = "http://www.reddit.com/.json";
+    private static final String API_URL = "http://www.reddit.com/";
 
     @Provides @Singleton
     public Client provideClient() {
@@ -45,5 +47,10 @@ public class ApiModule {
                 .setLogLevel(RestAdapter.LogLevel.FULL)
                 .setEndpoint(endpoint)
                 .build();
+    }
+
+    @Provides @Singleton
+    RedditService provideRedditService(RestAdapter adapter) {
+        return adapter.create(RedditService.class);
     }
 }

@@ -16,7 +16,7 @@ import edu.uiuc.acm.sigmobile.daggertutorial.modules.DataModule;
 public class DaggerApplication extends Application {
 
     /**
-     * This creates and stores the DAG defined by the modules it receives.  Whenever
+     * This creates and stores a DAG according to the modules it receives.  Whenever
      * dependencies are injected into an object, the ObjectGraph is traversed to find
      * all dependencies the object needs, throwing an error if it can't find all dependencies
      */

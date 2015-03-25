@@ -12,11 +12,16 @@ import android.view.ViewGroup;
 import android.os.Build;
 import android.widget.ListView;
 
+import javax.inject.Inject;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
 
 public class MainActivity extends ActionBarActivity {
+
+    @Inject
+    RedditService redditService;
 
     @InjectView(R.id.main_list)
     ListView list;
