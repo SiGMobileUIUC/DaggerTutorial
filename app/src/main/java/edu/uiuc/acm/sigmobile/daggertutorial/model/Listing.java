@@ -7,5 +7,18 @@ import com.google.gson.annotations.SerializedName;
  */
 public class Listing {
 
-    @SerializedName()
+    @SerializedName("thumbnail")
+    String thumbnailUrl;
+
+    @SerializedName("title")
+    String title;
+
+    public String getThumbnailUrl() {
+        return thumbnailUrl;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
 }

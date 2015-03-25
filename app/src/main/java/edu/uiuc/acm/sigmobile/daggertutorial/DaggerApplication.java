@@ -15,6 +15,11 @@ import edu.uiuc.acm.sigmobile.daggertutorial.modules.DataModule;
  */
 public class DaggerApplication extends Application {
 
+    /**
+     * This creates and stores the DAG defined by the modules it receives.  Whenever
+     * dependencies are injected into an object, the ObjectGraph is traversed to find
+     * all dependencies the object needs, throwing an error if it can't find all dependencies
+     */
     ObjectGraph objectGraph;
 
     @Override
@@ -23,9 +28,21 @@ public class DaggerApplication extends Application {
         objectGraph = ObjectGraph.create(getModules());
     }
 
+    /**
+     * @return A list of all modules we have defined for the app
+     */
     public List<Object> getModules() {
         return Arrays.asList(new ApiModule(),
                              new AppModule(this),
                              new DataModule());
+    }
+
+    /**
+     * Inject all dependencies into a given object (can be any object, such as an Activity or Fragment).
+     * Dependencies are marked within the object by the @Inject annotation.
+     * @param object
+     */
+    public void inject(Object object) {
+        objectGraph.inject(object);
     }
 }
