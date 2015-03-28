@@ -16,8 +16,8 @@ import edu.uiuc.acm.sigmobile.daggertutorial.modules.DataModule;
 public class DaggerApplication extends Application {
 
     /**
-     * This creates and stores a DAG according to the modules it receives.  Whenever
-     * dependencies are injected into an object, the ObjectGraph is traversed to find
+     * This stores a DAG created according to the modules it receives.  Whenever
+     * dependencies are injected into an object, the ObjectGraph is traversed to find and return
      * all dependencies the object needs, throwing an error if it can't find all dependencies
      */
     ObjectGraph objectGraph;
@@ -25,10 +25,12 @@ public class DaggerApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        // This takes an array containing all modules required for the dependency graph.
         objectGraph = ObjectGraph.create(getModules().toArray());
     }
 
     /**
+     * A helper method that defines a list of modules
      * @return A list of all modules we have defined for the app
      */
     public List<Object> getModules() {

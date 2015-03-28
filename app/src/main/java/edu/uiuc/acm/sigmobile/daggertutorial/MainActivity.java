@@ -34,8 +34,12 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // These two lines will inject all dependencies into this activity
         DaggerApplication app = (DaggerApplication) this.getApplication();
         app.inject(this);
+
+        // View initialization, just ignore this
         ButterKnife.inject(this);
         adapter = new MainAdapter(this);
         refreshData();
