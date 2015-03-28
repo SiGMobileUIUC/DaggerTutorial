@@ -1,4 +1,4 @@
-# Dependency Injection in Android (work in progress)
+# Dependency Injection in Android
 If you read enough about Android development, you'll inevitably run into a library named [Dagger][1], a dependency injector built for Android.  Everyone online seems to rave about it, but it can be daunting to learn how or why to use it.  The tutorial Square provides (on the Dagger webpage) is good, but the example they use is kind of abstract, and it assumes you have a decent amount of prior knowledge on the subject.  Here I'll start from the ground up and teach you everything you need to know to get up and running with Dagger.
 
 ## What does Dagger do?
