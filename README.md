@@ -94,13 +94,13 @@ Let's take a look at a module, [DataModule][9]:
 
 ### Performing the injection
 
-Take a look at the [DaggerApplication][8] class.
+Now that we know how to both define our graph of dependencies and mark our fields for injection, we are now ready to perform the injection itself.  To accomplish this, we need to set up an `ObjectGraph` instance.  Take a look at the [`DaggerApplication`][8] class:
 ```java
 public class DaggerApplication extends Application {
 
     /**
-     * This creates and stores the DAG defined by the modules it receives.  Whenever
-     * dependencies are injected into an object, the ObjectGraph is traversed to find
+     * This stores a DAG created according to the modules it receives.  Whenever
+     * dependencies are injected into an object, the ObjectGraph is traversed to find and return
      * all dependencies the object needs, throwing an error if it can't find all dependencies
      */
     ObjectGraph objectGraph;
@@ -112,6 +112,7 @@ public class DaggerApplication extends Application {
     }
 
     /**
+     * A helper method that defines a list of modules
      * @return A list of all modules we have defined for the app
      */
     public List<Object> getModules() {
@@ -130,7 +131,30 @@ public class DaggerApplication extends Application {
     }
 }
 ```
+`DaggerApplication` is a good place to put an `ObjectGraph` instance, since it allows `ObjectGraph` to persist across the entire lifecycle of the application.  Along with this, it makes it easy to call `inject()` from anywhere in the app.  For example, in [`MainActivity`][7]:
 
+```java
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+      super.onCreate(savedInstanceState);
+      setContentView(R.layout.activity_main);
+
+      // These two lines will inject all dependencies into this activity
+      DaggerApplication app = (DaggerApplication) this.getApplication();
+      app.inject(this);
+
+      // View initialization, just ignore this
+      ButterKnife.inject(this);
+      adapter = new MainAdapter(this);
+      refreshData();
+      list.setAdapter(adapter);
+  }
+```
+We have to call `app.inject(this)` before we can use any of the objects we annotate with `@Inject`.  Failing to do this will result in a `NullPointerException`.
+
+## Additional info
+Dagger has a bunch of features beyond the scope of this tutorial.  To learn more about them, take a look at the [Dagger website][1].
+Note that Dagger 2 is set for release in the near future.  You can check it out [here][11].
 
 
 [1]: http://square.github.io/dagger/
@@ -140,6 +164,7 @@ public class DaggerApplication extends Application {
 [5]: http://square.github.io/picasso/
 [6]: http://github.com/SiGMobileUIUC/DaggerTutorial/blob/master/app/build.gradle
 [7]: http://github.com/SiGMobileUIUC/DaggerTutorial/blob/master/app/src/main/java/edu/uiuc/acm/sigmobile/daggertutorial/MainActivity.java
-[8]: 
-[9]: 
+[8]: https://github.com/SiGMobileUIUC/DaggerTutorial/blob/master/app/src/main/java/edu/uiuc/acm/sigmobile/daggertutorial/modules/ApiModule.java
+[9]: https://github.com/SiGMobileUIUC/DaggerTutorial/blob/master/app/src/main/java/edu/uiuc/acm/sigmobile/daggertutorial/modules/DataModule.java
 [10]: http://github.com/SiGMobileUIUC/DaggerTutorial/blob/master/app/src/main/java/edu/uiuc/acm/sigmobile/daggertutorial/DaggerApplication.java
+[11]: http://google.github.io/dagger/
