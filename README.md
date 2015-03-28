@@ -24,7 +24,7 @@ Dagger is added to the project through the following lines in the the [Gradle fi
 
 ### Marking fields for injection
 
-We use the `javax.inject.Inject` annotation to mark fields for injection.  Take a look at [`MainActivity`][7]:
+We use the `javax.inject.Inject` annotation to mark fields for injection.  Take a look at this snippet from [`MainActivity`][7]:
 ```java
   @Inject
   RedditService redditService;
@@ -33,7 +33,64 @@ In this case, the `@Inject` annotation tells Dagger that it should look in its g
 
 ### Creating the graph of dependencies
 
-There are two annotations we use to create a graph of dependencies.
+In order for Dagger to inject something, we need to define a graph of dependencies.  There are two annotations we use to create this graph.
+Whenever we want to satisfy a dependency, we use the `@Provides` annotation.  This annotaion is used on a method, where the return type is equal to the dependency we're satisfying.  Here's an example from [ApiModule][8]:
+```java
+  @Provides
+  Endpoint provideEndpoint() {
+      return Endpoints.newFixedEndpoint(API_URL);
+  }
+```
+This method will return an instance of `Endpoint` to any specified injectable class.  But what if we have to satisfy a dependency that relies on a few other objects?  The solution is simple, `@Provides` methods have dependencies specified as their parameters.  Take a look at this snippet from [ApiModule][8]:
+```java
+  @Provides @Singleton
+  RestAdapter provideRestAdapter(Endpoint endpoint, Client client, Converter converter) {
+      return new RestAdapter.Builder()
+              .setClient(client)
+              .setConverter(converter)
+              .setLogLevel(RestAdapter.LogLevel.FULL)
+              .setEndpoint(endpoint)
+              .build();
+  }
+```
+In order to produce a `RestAdapter`, we need to define providers for `Endpoint`, `Client`, and `Converter`.  `@Singleton` is an optional annotation that tells Dagger to return the same instance across all injectable classes.  Through these `@Provides` methods, we are able to create the graph Dagger needs to find and satisfy its dependencies.
+
+All methods annotated with `@Provides` have to be contained within a module.  A module is simply a class with a `@Module` annotation.  Modules serve a few purposes:
+* They allow dependencies to be organized logically
+* They contain features which help Dagger better understand the graph you're defining.
+  * Compile-time validation of the graph is one of these features.
+
+Let's take a look at a module, [DataModule][9]:
+```java
+@Module(// If this module requires a dependency from other modules, specify those other modules here
+        includes = AppModule.class,
+
+        // Any classes that this module injects have to be declared here
+        injects = MainAdapter.class,
+
+        // If an injectable class requires dependencies from other modules, set complete = false
+        complete = false,
+
+        // If an injectable class only require some of this module's dependencies, declare library = true
+        library = true)
+    public class DataModule {
+
+        @Provides @Singleton
+        public Gson provideGson() {
+            return new GsonBuilder()
+                    .setPrettyPrinting()
+                    .create();
+        }
+
+
+        @Provides @Singleton
+    public Picasso providePicasso(Application app) {
+        return new Picasso.Builder(app)
+                .loggingEnabled(true)
+                .build();
+    }
+}
+```
 
 ### Performing the injection
 
@@ -83,4 +140,6 @@ public class DaggerApplication extends Application {
 [5]: http://square.github.io/picasso/
 [6]: http://github.com/SiGMobileUIUC/DaggerTutorial/blob/master/app/build.gradle
 [7]: http://github.com/SiGMobileUIUC/DaggerTutorial/blob/master/app/src/main/java/edu/uiuc/acm/sigmobile/daggertutorial/MainActivity.java
-[8]: http://github.com/SiGMobileUIUC/DaggerTutorial/blob/master/app/src/main/java/edu/uiuc/acm/sigmobile/daggertutorial/DaggerApplication.java
+[8]: 
+[9]: 
+[10]: http://github.com/SiGMobileUIUC/DaggerTutorial/blob/master/app/src/main/java/edu/uiuc/acm/sigmobile/daggertutorial/DaggerApplication.java
