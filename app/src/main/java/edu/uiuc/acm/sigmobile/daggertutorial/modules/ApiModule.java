@@ -6,6 +6,7 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import edu.uiuc.acm.sigmobile.daggertutorial.MainActivity;
 import retrofit.Endpoint;
 import retrofit.Endpoints;
 import retrofit.RestAdapter;
@@ -19,22 +20,23 @@ import edu.uiuc.acm.sigmobile.daggertutorial.RedditService;
 /**
  * Created by Stephen on 3/24/2015.
  */
-@Module
+@Module(injects = MainActivity.class,
+        includes = DataModule.class)
 public class ApiModule {
 
-    private static final String API_URL = "http://www.reddit.com/";
+    private static final String API_URL = "http://www.reddit.com";
 
-    @Provides @Singleton
+    @Provides
     public Client provideClient() {
         return new OkClient();
     }
 
-    @Provides @Singleton
+    @Provides
     Endpoint provideEndpoint() {
         return Endpoints.newFixedEndpoint(API_URL);
     }
 
-    @Provides @Singleton
+    @Provides
     Converter provideConverter(Gson gson) {
         return new GsonConverter(gson);
     }

@@ -1,6 +1,7 @@
 package edu.uiuc.acm.sigmobile.daggertutorial;
 
 import android.app.Activity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,7 @@ import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import edu.uiuc.acm.sigmobile.daggertutorial.model.DataElement;
 import edu.uiuc.acm.sigmobile.daggertutorial.model.Listing;
 
 /**
@@ -28,28 +30,28 @@ public class MainAdapter extends BaseAdapter {
     Picasso picasso;
 
     private LayoutInflater inflater;
-    private List<Listing> listings;
+    private List<DataElement> elements;
 
     public MainAdapter(Activity activity) {
         inflater = LayoutInflater.from(activity);
-        this.listings = new ArrayList<>();
+        this.elements = new ArrayList<>();
         DaggerApplication app = (DaggerApplication) activity.getApplication();
         app.inject(this);
     }
 
-    public void setData(List<Listing> listings) {
-        this.listings = listings;
+    public void setData(List<DataElement> elements) {
+        this.elements = elements;
         this.notifyDataSetChanged();
     }
 
     @Override
     public int getCount() {
-        return listings.size();
+        return elements.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return listings.get(position);
+        return elements.get(position);
     }
 
     @Override
@@ -67,11 +69,16 @@ public class MainAdapter extends BaseAdapter {
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-        Listing listing = listings.get(position);
+        Listing listing = elements.get(position).getListing();
+        Log.d("asdf", listing.getTitle());
         holder.title.setText(listing.getTitle());
-        picasso.load(listing.getThumbnailUrl())
-               .resize(100, 100)
-               .into(holder.thumbnail);
+        if(!listing.getThumbnailUrl().isEmpty()) {
+            picasso.load(listing.getThumbnailUrl())
+                    .placeholder(R.drawable.icon_placeholder)
+                    .resize(128, 128)
+                    .centerInside()
+                    .into(holder.thumbnail);
+        }
 
         return convertView;
     }

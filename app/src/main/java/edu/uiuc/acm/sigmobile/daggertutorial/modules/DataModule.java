@@ -11,30 +11,36 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import edu.uiuc.acm.sigmobile.daggertutorial.MainAdapter;
 
 /**
  * Created by Stephen on 3/24/2015.
  */
-@Module(complete = false,
-        library = true)
-public class DataModule {
+@Module(// If this module requires a dependency from other modules, specify those other modules here
+        includes = AppModule.class,
 
-    @Provides @Singleton
-    public Gson provideGson() {
-        return new GsonBuilder()
+        // Any classes that this module injects have to be declared here
+        injects = MainAdapter.class,
+
+        // If an injectable class requires dependencies from other modules, set complete = false
+        complete = false,
+
+        // If an injectable class only require some of this module's dependencies, declare library = true
+        library = true)
+    public class DataModule {
+
+        @Provides @Singleton
+        public Gson provideGson() {
+            return new GsonBuilder()
                     .setPrettyPrinting()
                     .create();
-    }
+        }
 
 
-    @Provides @Singleton
+        @Provides @Singleton
     public Picasso providePicasso(Application app) {
-        // By default Picasso uses 1/7 of usable memory, we want a little more for loading highlights
-        Runtime rt = Runtime.getRuntime();
-        long maxMemory = rt.maxMemory();
         return new Picasso.Builder(app)
                 .loggingEnabled(true)
-                .memoryCache(new LruCache((int) (maxMemory / 3)))
                 .build();
     }
 }

@@ -10,9 +10,9 @@ import java.util.List;
 public class Data {
 
     @SerializedName("children")
-    List<Listing> listings;
+    List<DataElement> elements;
 
-    public List<Listing> getListings() {
-        return listings;
+    public List<DataElement> getDataElements() {
+        return elements;
     }
 }
