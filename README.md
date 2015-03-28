@@ -14,15 +14,30 @@ It should be noted that Dagger's benefits become exponentially more apparent the
 
 ## Code Example
 
-Now we know what Dagger does, let's take a look at some code.  I made a sample app with some practical applications of Dagger.  The app doesn't do anything fancy, it just takes the top posts from Reddit (using [Retrofit][4]) and displays the title and thumbnail of each post in a list.  The thumbnails are loaded with [Picasso][5] (Square libraries are awesome).  
+Now that we know what Dagger does, let's take a look at some code.  I made a sample app with some practical applications of Dagger.  The app doesn't do anything fancy, it just takes the top posts from Reddit (using [Retrofit][4]) and displays the title and thumbnail of each post in a list.  The thumbnails are loaded with [Picasso][5] (Square libraries are awesome).  
 
 Dagger is added to the project through the following lines in the the [Gradle file][6]:
 ```groovy
   compile 'com.squareup.dagger:dagger:1.2.2'
   provided 'com.squareup.dagger:dagger-compiler:1.2.2'
 ```
-The first thing we have to understand is how we define a graph of dependencies within Dagger.
-Take a look at the [DaggerApplication][7] class.
+
+### Marking fields for injection
+
+We use the `javax.inject.Inject` annotation to mark fields for injection.  Take a look at [`MainActivity`][7]:
+```java
+  @Inject
+  RedditService redditService;
+```
+In this case, the `@Inject` annotation tells Dagger that it should look in its graph of dependencies to obtain a `RedditService` instance.  Please note that `@Inject` does not perform any injection for you, it's simply used as a marker for Dagger to read.  We'll get to the actual injection in just a bit.
+
+### Creating the graph of dependencies
+
+There are two annotations we use to create a graph of dependencies.
+
+### Performing the injection
+
+Take a look at the [DaggerApplication][8] class.
 ```java
 public class DaggerApplication extends Application {
 
@@ -67,4 +82,5 @@ public class DaggerApplication extends Application {
 [4]: http://square.github.io/retrofit/
 [5]: http://square.github.io/picasso/
 [6]: http://github.com/SiGMobileUIUC/DaggerTutorial/blob/master/app/build.gradle
-[7]: http://github.com/SiGMobileUIUC/DaggerTutorial/blob/master/app/src/main/java/edu/uiuc/acm/sigmobile/daggertutorial/DaggerApplication.java
+[7]: http://github.com/SiGMobileUIUC/DaggerTutorial/blob/master/app/src/main/java/edu/uiuc/acm/sigmobile/daggertutorial/MainActivity.java
+[8]: http://github.com/SiGMobileUIUC/DaggerTutorial/blob/master/app/src/main/java/edu/uiuc/acm/sigmobile/daggertutorial/DaggerApplication.java
