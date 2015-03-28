@@ -6,7 +6,7 @@ If you read enough about Android development, you'll inevitably run into a libra
 Let's start with dependency injection: it's a term that's thrown around a lot within industry, but what does it really mean?  The best explanation I've found is [this one][2] by James Shore.  It's a quick read (1-3 mins), but if you don't want to go through it, the main takeaway from the article is the following quote:
 > **Dependency injection means giving an object its instance variables. Really. That's it.**
 
-It's true, and that's what Dagger does to help: it allows you to define all of your dependencies individually and organize them into a [directed acyclic graph][3] (which is where the name comes from, if you're wondering).  Any of the objects defined within your DAG can then be instantiated within your application through a simple `@Inject` annotation.  This is good for a number of reasons:
+It's true, and that's what Dagger does to help: it allows you to define all of your dependencies individually and organize them into a [directed acyclic graph][3] (DAGger).  Any of the objects defined within your DAG can then be instantiated within your application through a simple `@Inject` annotation.  This is good for a number of reasons:
 * You don't have to worry about how to order your dependencies, which can be a pain for large projects.
 * It seriously decouples your code.  If you want to modify or swap out integral components in your app, you can now do it very efficiently.
   * This is great for unit testing--for example, if you want to mock your data instead of retrieve it from a server.
@@ -154,6 +154,7 @@ We have to call `app.inject(this)` before we can use any of the objects we annot
 
 ## Additional info
 Dagger has a bunch of features beyond the scope of this tutorial.  To learn more about them, take a look at the [Dagger website][1].
+
 Note that Dagger 2 is set for release in the near future.  You can check it out [here][11].
 
 
